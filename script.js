@@ -1,4 +1,5 @@
 const input = document.querySelector('.input')
+const stats = document.querySelector('.stats')
 
 const headers = {
   'method': "GET",
@@ -31,26 +32,59 @@ async function getAccountId(name = "") {
 //kd: number,kills: number,lastmodified: number, matchesplayed: number, minutesplayed: number, placetop1: number, placetop10: number, placetop12: number, placetop25: number, placetop3: number, placetop5: number, placetop6: number, playersoutlived: number, score: number, winrate: number
 
 const ids = [
-		'kd',
-    'kills',
-    'lastmodified',
-    'matchesplayed',
-    'minutesplayed',
-    'placetop1',
-    'placetop10',
-    'placetop12',
-    'placetop25',
-    'placetop3',
-    'placetop5',
-    'placetop6',
-    'playersoutlived',
-    'score',
-    'winrate'
-]
+  'kd',
+  'kills',
+  'matchesplayed',
+  'minutesplayed',
+  'placetop1',
+  'placetop10',
+  'placetop3',
+  'placetop5',
+  'playersoutlived',
+  'winrate'
+];
+
 const account_ids = [
 	"level",
   "process_pct"
 ]
+
+const teams = ["duo","trio", "squad"]
+const solo = document.querySelector('.stat.solo')
+
+function splitUp(string){
+  return string.replace(/([a-z])([A-Z])/g, '$1 $2')
+}
+
+function capFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function makeStats(){ 
+  for (const team of teams){
+    const div = document.createElement('div')
+
+    const h2 = document.createElement('h2')
+    h2.innerText = `${capFirstLetter(team)} Stats`
+
+    div.appendChild(h2)
+
+    div.classList.add('stat', team)
+
+    for (const id of ids){
+      const ele = document.createElement('p');
+      const split = splitUp(id)
+
+ele.innerHTML = `${capFirstLetter(split)}: <span id="${team}-${id}"></span>`;
+      ele.childNodes[0].id = `${team}-${id}`
+  
+      div.appendChild(ele)
+    }
+
+    stats.appendChild(div)
+  }
+}
+makeStats()
 
 function handleData(stats = {}) {
   for (const team in stats){
@@ -106,5 +140,5 @@ document.addEventListener('keyup', function(e) {
 })
 
 input.addEventListener('input', function() {
-  input.value = input.value.toString().substring(0, 16)
+  input.value = input.value.toString().substring(0, 19)
 })
